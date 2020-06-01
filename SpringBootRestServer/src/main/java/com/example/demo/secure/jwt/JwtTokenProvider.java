@@ -19,56 +19,10 @@ import java.util.*;
 @Component
 public class JwtTokenProvider {
 
-    /*private final AuthenticationManager authenticationManager;
-
-    public JwtTokenProvider(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
-
-
-
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
-        try {
-            User authenticationRequest = new ObjectMapper().
-                    readValue(request.getInputStream(), (User.class));
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    authenticationRequest.getUsername(),
-                    authenticationRequest.getPassword()
-            );
-            Authentication authenticate = authenticationManager.authenticate(authentication);
-            return authenticate;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-
-        String key = "securesecuresecuresecuresecuresecuresecuresecure";
-
-        String token = Jwts.builder()
-                .setSubject(authResult.getName())
-                .claim("authorities", authResult.getAuthorities())
-                .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
-                .signWith(SignatureAlgorithm.HS256, key)
-                .compact();
-
-        response.addHeader("Authorization", "Bearer " + token);
-    }*/
-
     @Value("jwtApp")
     private String secret;
 
-    @Value("360000")
+    @Value("3600000")
     private long validityInMsec;
 
 
@@ -94,9 +48,6 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
         return token;
-
-//String bearerToken = sendBearerToken(resp, token);
-
     }
 
     public Authentication getAuthentication(String token) {
@@ -147,9 +98,5 @@ public class JwtTokenProvider {
         userRoles.forEach(name -> result.add(name.getRole()));
         return result;
     }
-
-//    private void sendBearerToken(HttpServletResponse resp, String token) {
-//        resp.addHeader("Authorization", "Bearer " + token);
-//        return bearerToken;
 }
 

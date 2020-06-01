@@ -32,7 +32,6 @@ public class AuthenticationRestController {
     }
 
     @PostMapping("login")
-//    public ResponseEntity login(@RequestBody User user) {
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         System.out.println(requestDto.getUsername());
         try {
@@ -54,10 +53,6 @@ public class AuthenticationRestController {
             UserDTO userDTO = UserDTO.fromUser(authUser);
             response.put("roles", userDTO.getRole());
             return ResponseEntity.ok(response);
-//            DtoForLogin dtoForLogin = new DtoForLogin();
-//            dtoForLogin.setToken(token);
-//            dtoForLogin.setRoles(DtoForLogin.rolesToString(authUser.getRoles()));
-//            return ResponseEntity.ok().body(dtoForLogin);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Your username or password is invalid");
         }

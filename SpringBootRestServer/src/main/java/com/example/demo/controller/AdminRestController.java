@@ -5,7 +5,6 @@ import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,30 +27,14 @@ public class AdminRestController {
     public ResponseEntity<List<DtoForClient>> getAllUsers() {
         List<User> users = userServiceImpl.getAllUsers();
         if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
         List<DtoForClient> dtoUsersForClient = new ArrayList<>();
         for (User user : users) {
             dtoUsersForClient.add(DtoForClient.getDtoForClient(user));
         }
-
         return ResponseEntity.ok().body(dtoUsersForClient);
     }
-
-    /*@GetMapping("/users")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        System.out.println("Request for list of all users");
-        List<User> users = this.userServiceImpl.getAllUsers();
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        List<UserDTO> usersDto = new ArrayList<>();
-        for (User user : users) {
-            usersDto.add(UserDTO.fromUser(user));
-        }
-
-        return new ResponseEntity<>(usersDto, HttpStatus.OK);
-    }*/
 
     @GetMapping("/roles")
     public ResponseEntity<List<Role>> getRoles() {
@@ -75,7 +58,7 @@ public class AdminRestController {
         }
         User user = DtoForClient.getUserFromDto(dtoUser);
         userServiceImpl.addUser(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().body(dtoUser);
     }
 
     @GetMapping("/editUser/{id}")
@@ -87,47 +70,33 @@ public class AdminRestController {
         return ResponseEntity.ok().body(user);
     }
 
-    /*public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "id") Long userId) {
-//        User user = userServiceImpl.getUserById(id);
-        if (userId == null) {
-            System.out.println("User's ID does not get");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        User user = this.userServiceImpl.getUserById(userId);
-        if (user == null) {
-            System.out.println("User with this ID is not founded");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(UserDTO.fromUser(user), HttpStatus.OK);
-
-        *//*DtoForClient dtoForClient = DtoForClient.getDtoForClient(user);
-        return ResponseEntity.ok().body(dtoForClient);*//*
-    }*/
-
     @PutMapping("/editUser")
     public void updateUser(@RequestBody User editUser) {
         userServiceImpl.updateUser(editUser);
     }
-    /*public void updateUser(@RequestBody UserDTO editUser) {
-        System.out.println();
-        userServiceImpl.updateUser(editUser);
-    }*/
-    /*public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
-//        UserDTO userDTO = userServiceImpl.getUserById(userId);
-        if (userDTO == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        System.out.println("Collected a new user from page");
-        System.out.println(userDTO);
-        this.userServiceImpl.updateUser(userDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
-        *//*userDTO.setUsername(editUser.getUsername());
-        userDTO.setPassword(editUser.getPassword());
-        userDTO.setRoles(editUser.getRoles());
-        userServiceImpl.updateUser(userDTO);
-        return ResponseEntity.ok().body(DtoForClient.getDtoForClient(userDTO));*//*
-    }*/
+
+//    @GetMapping("/editUser/{id}")
+//    public ResponseEntity<DtoForClient> getUserById(@PathVariable(value = "id") Long id) {
+//        User user = userServiceImpl.getUserById(id);
+//        if (user == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        DtoForClient dtoUserForClient = DtoForClient.getDtoForClient(user);
+//        return ResponseEntity.ok().body(dtoUserForClient);
+//    }
+//
+//    @PutMapping("/editUser/{id}")
+//    public ResponseEntity<DtoForClient> updateUser(@PathVariable(value = "id") Long id, @Valid @RequestBody DtoForClient editUser) {
+//        User user = userServiceImpl.getUserById(id);
+//        if (user == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        user.setUsername(editUser.getUsername());
+//        user.setPassword(editUser.getPassword());
+//        user.setRoles(editUser.getRoles());
+//        userServiceImpl.updateUser(user);
+//        return ResponseEntity.ok().body(DtoForClient.getDtoForClient(user));
+//    }
 
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<DtoForClient> deleteUser(@PathVariable(value = "id") Long id) {
@@ -136,16 +105,16 @@ public class AdminRestController {
             return ResponseEntity.notFound().build();
         }
         userServiceImpl.deleteUser(userFromDB.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<DtoForClient> viewAdmin(@PathVariable(name = "id") Long id) {
         User user = userServiceImpl.getUserById(id);
         if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         }
-        return new ResponseEntity<>(DtoForClient.getDtoForClient(user), HttpStatus.OK);
+        return ResponseEntity.ok().body(DtoForClient.getDtoForClient(user));
     }
 }
 

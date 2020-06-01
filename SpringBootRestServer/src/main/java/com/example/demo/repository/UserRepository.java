@@ -11,15 +11,12 @@ import java.util.List;
 @Repository("UserRepository")
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("FROM User us JOIN FETCH us.roles where us.username = :username")
+    @Query("FROM User u JOIN FETCH u.roles where u.username = :username")
     User findUserByUsername(@Param("username") String username);
 
-    /*@Query("FROM User us JOIN FETCH us.roles")*/
+    @Query("select distinct u from User u join fetch u.roles order by u.id")
     List<User> findAll();
 
-    //@Query("FROM User u JOIN FETCH u.roles WHERE u.username= :username")
-//    User findUserByUsername(@Param("username") String username);
-
-    /*@Query("FROM User u JOIN FETCH u.roles")*/
-    //List<User> getAllUsers();
+    @Query("select user from User user left join fetch user.roles where user.id=:id")
+    User getById(@Param("id") Long id);
 }

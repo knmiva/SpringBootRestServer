@@ -66,15 +66,6 @@ public class DtoForClient {
         return dtoForClient;
     }
 
-    /*public static DtoForClient getDtoForClient(UserDTO user) {
-        DtoForClient dtoForClient = new DtoForClient();
-        dtoForClient.setId(user.getId());
-        dtoForClient.setUsername(user.getUsername());
-        dtoForClient.setPassword(user.getPassword());
-        dtoForClient.setRoles(user.getRoles());
-        return dtoForClient;
-    }*/
-
     public static User getUserFromDto(DtoForClient userForClient) {
         User user = new User();
         user.setUsername(userForClient.getUsername());
